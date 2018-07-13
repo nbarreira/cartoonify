@@ -43,3 +43,4 @@ To shutdown the server, hit Ctrl+C.
 
 It was also implemented a client program, written in python, that receives a path to an image as an argument, makes the http request to the flask server and receives the cartoon image. 
 
+`python3 client.py path_to_image`
