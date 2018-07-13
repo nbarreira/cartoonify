@@ -66,6 +66,7 @@ class SketchGizeh(object):
                 if classes[i] in labels.keys():
                     class_name = labels[classes[i]]['name']
                     drawn_objects.append(class_name)
+                    print("drawing", class_name, scores[i])
                 else:
                     raise ValueError('no label for index {}'.format(i))
                 ymin, xmin, ymax, xmax = box

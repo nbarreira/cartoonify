@@ -105,7 +105,7 @@ class DrawingDataset(object):
         """
         try:
             if name not in self._categories:
-                # try and get the closest matching drawing. If nothing suitable foumd then return a scorpion
+                # try and get the closest matching drawing. If nothing suitable found then return a scorpion
                 name = self._category_mapping.get(name, 'scorpion')
             if index < 1 or not isinstance(index, int):
                 raise ValueError('index must be integer > 0')

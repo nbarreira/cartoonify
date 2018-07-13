@@ -4,7 +4,6 @@ import numpy as np
 from pathlib import Path
 import logging
 from app.sketch import SketchGizeh
-from app.gpio import Gpio
 import subprocess
 from csv import writer
 
@@ -13,14 +12,12 @@ class Workflow(object):
     """controls execution of app
     """
 
-    def __init__(self, dataset, imageprocessor, camera):
+    def __init__(self, dataset, imageprocessor):
         self._path = Path('')
         self._image_path = Path('')
         self._dataset = dataset
         self._image_processor = imageprocessor
         self._sketcher = None
-        self.gpio = Gpio()
-        self._cam = camera
         self._logger = logging.getLogger(self.__class__.__name__)
         self._image = None
         self._annotated_image = None
@@ -30,7 +27,7 @@ class Workflow(object):
         self._scores = None
         self.count = 0
 
-    def setup(self, setup_gpio=True):
+    def setup(self):
         self._logger.info('loading cartoon dataset...')
         self._dataset.setup()
         self._logger.info('Done')
@@ -39,44 +36,11 @@ class Workflow(object):
         self._logger.info('loading tensorflow model...')
         self._image_processor.setup()
         self._logger.info('Done')
-        if setup_gpio:
-            self._logger.info('setting up GPIO...')
-            self.gpio.setup(capture_callback=self.run)
-            self._logger.info('done')
-        self._path = Path(__file__).parent / '..' / '..' / 'images'
         if not self._path.exists():
             self._path.mkdir()
         self.count = len(list(self._path.glob('image*.jpg')))
-        if self._cam is not None:
-            self._cam.resolution = (640, 480)
         self._logger.info('setup finished.')
 
-    def run(self, print_cartoon=False):
-        """capture an image, process it, save to file, and optionally print it
-
-        :return:
-        """
-        try:
-            self._logger.info('capturing and processing image.')
-            self.gpio.set_status_pin(True)
-            self.count += 1
-            path = self._path / ('image' + str(self.count) + '.jpg')
-            self.capture(path)
-            self.process(path, top_x=3)
-            annotated, cartoon = self.save_results()
-            if print_cartoon:
-                subprocess.call(['lp', '-o', 'landscape', '-c', str(cartoon)])
-            self.gpio.set_status_pin(False)
-        except Exception as e:
-            self._logger.exception(e)
-
-    def capture(self, path):
-        if self._cam is not None:
-            self._logger.info('capturing image')
-            self._cam.capture(str(path))
-        else:
-            raise AttributeError("app wasn't started with --camera flag, so you can't use the camera to capture images.")
-        return path
 
     def process(self, image_path, threshold=0.3, top_x=None):
         """processes an image. If no path supplied, then capture from camera
@@ -102,6 +66,7 @@ class Workflow(object):
             if top_x:
                 sorted_scores = sorted(self._scores.flatten())
                 threshold = sorted_scores[-min([top_x, self._scores.size])]
+                print("TRESHOLD", threshold)
             self._image_labels = self._sketcher.draw_object_recognition_results(np.squeeze(self._boxes),
                                    np.squeeze(self._classes).astype(np.int32),
                                    np.squeeze(self._scores),
@@ -132,6 +97,17 @@ class Workflow(object):
         self._sketcher.save_png(cartoon_path)
         return annotated_path, cartoon_path
 
+
+    def get_results(self):
+        """get result images as png
+
+        :return cartoon image as numpy array
+        """
+        self._logger.info('creating image...')
+        npimage = self._sketcher.get_npimage()
+
+        return npimage
+
     def _save_3d_numpy_array_as_png(self, img, path):
         """saves a NxNx3 8 bit numpy array as a png image
 
@@ -147,7 +123,6 @@ class Workflow(object):
 
     def close(self):
         self._image_processor.close()
-        self.gpio.close()
 
     @property
     def image_labels(self):
