@@ -35,12 +35,11 @@ If everything is ok, the original image and its cartoon version will be shown in
 
 For running the REST server, execute the following commands in the directory `cartoonify`:
 
-``
-export FLASK_APP=server.py
+`export FLASK_APP=server.py`
 
-python3 -m flask run
-``
-To shutdown the server, hit Cntrl+C.
+`python3 -m flask run`
+
+To shutdown the server, hit Ctrl+C.
 
 It was also implemented a client program, written in python, that receives a path to an image as an argument, makes the http request to the flask server and receives the cartoon image. 
 
