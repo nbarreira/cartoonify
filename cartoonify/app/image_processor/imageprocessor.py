@@ -5,10 +5,12 @@ import tarfile
 import tensorflow as tf
 from PIL import Image
 from app.object_detection.utils import label_map_util
-from app.object_detection.utils import visualization_utils as vis_util
+#from app.object_detection.utils import visualization_utils as vis_util
 import logging
 from pathlib import Path
 import click
+import io
+import base64
 
 
 root = Path(__file__).parent
@@ -96,10 +98,26 @@ class ImageProcessor(object):
         category_index = label_map_util.create_category_index(categories)
         return category_index
 
+    def load_image_from_bytestring(self, bytestring):
+        # Convert the bytestring into a PIL image
+        image = Image.open(io.BytesIO(bytestring))
+        (im_width, im_height) = image.size
+        return np.array(image.getdata()).reshape((im_height, im_width, 3)).astype(np.uint8)
+
+
     def load_image_into_numpy_array(self, path, scale=1.0):
         """load image into NxNx3 numpy array
         """
         image = Image.open(path)
+        image = image.resize(tuple(int(scale * dim) for dim in image.size))
+        (im_width, im_height) = image.size
+        return np.array(image.getdata()).reshape((im_height, im_width, 3)).astype(np.uint8)
+
+
+    def scale_image(self, img, scale=1.0):
+        """scale an image and return a numpy array
+        """
+        image = Image.fromarray(img)
         image = image.resize(tuple(int(scale * dim) for dim in image.size))
         (im_width, im_height) = image.size
         return np.array(image.getdata()).reshape((im_height, im_width, 3)).astype(np.uint8)
@@ -140,3 +158,20 @@ class ImageProcessor(object):
 
     def close(self):
         self._session.close()
+
+    def get_composite(self, img, cartoon):
+        c = np.zeros((img.shape[0], img.shape[1]*2, img.shape[2]), dtype = img.dtype)
+        print(c.shape)
+        c[:,0:img.shape[1],:] = img
+        c[:,img.shape[1]:,:] = cartoon
+        return Image.fromarray(c)
+
+    def npimage_to_bytestring(self, npimage):
+        img = Image.fromarray(npimage)
+        byteArr = io.BytesIO()
+        img.save(byteArr, format='JPEG')
+        bytestr = byteArr.getvalue()
+        return base64.b64encode(bytestr).decode('ascii')
+
+
+

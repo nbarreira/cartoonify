@@ -1,63 +1,45 @@
-## Draw This.
+## Cartoonify REST Server
 
-[_Draw This_](http://danmacnish.com/2018/07/01/draw-this/) is a polaroid camera that draws cartoons.
-You point, and shoot - and out pops a cartoon; the camera's best interpretation of what it saw.
-The camera is a mash up of a neural network for object recognition, the google quickdraw dataset, a thermal printer, and a raspberry pi.
+This is a REST server based on the Cartoonify project. The aim of this project is convert photographs into cartoons. First, the main objects of the scene are detected  using a Single Shot Multibox Detector (SSD).  In particular, a MobilenetSSD model was implemented in tensorflow and trained with the Coco dataset.  Then, drawings from the Google QuickDraw dataset are randomly picked to replace the identified objects.
 
-If you'd like to try it out for yourself, [the good folks at Kapwing have created an online version!](https://www.kapwing.com/cartoonify) 
+In this fork, as it is intended to run in a desktop computer, all the references to raspberry pi and arduino were removed.
 
-![photo](../master/photos/raspi-camera-cartoons.jpg)
 
-The software can run both on a desktop environment (OSX, Linux) such as a laptop, or an embedded environment on a raspberry pi. 
+This project contains a REST server written in Flask that exposes only one type of request:
 
-### Desktop installation (only tested on OSX and linux)
+- URL:    /cartoon
+- Method: POST
+- Data params: { 'image': 'base64 encoded string with the image data'}
+- Success response: 
+	  - Code: 200
+	  - Content: { 'cartoon': 'base64 encoded string with the cartoon data'}
+
+
+
+
+### Desktop installation (only tested in linux)
 
 - Requirements:
-    * Python 2.7*
-- install dependencies using `pip install -r requirements_desktop.txt` from the `cartoonify` subdirectory.
-- run app from command line using `python run.py`.
-- select 'yes' when asked to download the cartoon dataset (~5GB) and tensorflow model (~100MB).
-- close the app using ctrl-C once the downloads have finished.
-- start the app again using `cartoonify`.
-- you will be prompted to enter the filepath to an image for processing. Enter the absolute filepath surrounded by double quotes.
+    * Python 3.x*
+- install dependencies using `pip3 install -r requirements_desktop.txt` from the `install` subdirectory.
+- download the cartoon dataset (~1.4GB) and the tensorflow model (~100MB) by running `python3 download_assets.py` from the  `install` subdirectory.
 
-*Unfortunately python 2.7 is required because the correct python 3 wheels are not available for both the pi and desktop.
+### Standalone 
+You can run the Cartoonify project in a standalone mode. In the `cartoonify`directory, just execute:
 
-### Raspberry pi wiring
+`python3 command_line.py path_to_image `
 
-The following wiring diagram will get you started with a shutter button and a status LED.
-If the software is working correctly, the status LED should light up for 2-3 seconds when the shutter is pressed
-while the raspi is processing an image. If the light stays on, something has gone wrong (most likely the camera is unplugged).
+If everything is ok, the original image and its cartoon version will be shown in a window.
 
-__IMPORTANT NOTE__ the diagram below shows AA cells, however this is not correct. You must use eneloop cells to power the camera - these cells
-deliver 1.2V each, as well as enough current to drive the raspi and thermal printer.
+### REST server
 
-![Wiring diagram](../master/schematics/cartoon_camera_schematic_bb.png)
+For running the REST server, execute the following commands in the directory `cartoonify`:
 
-### Raspberry pi installation
+``
+export FLASK_APP=server.py
+python3 -m flask run
+``
+To shutdown the server, hit Cntrl+C.
 
-- requirements:
-    * raspberry pi 3
-    * rasbian stretch image on 16gb SD card (8gb too small)
-    * internet access on the raspi
-    * pip + python
-    * raspi camera v2
-    * a button, led, 220 ohm resistor and breadboard
-    * (optional) Thermal printer to suit a raspi 3. I used [this printer here](https://www.adafruit.com/product/2751).
-    Note you will need to use the printer TTL serial interface as per the wiring diagram above, rather than USB.
-
-- install docker on the raspi by running: `curl -sSL https://get.docker.com | sh`
-- set up and enable the raspi camera through `raspi-config`
-- clone the source code from this repo
-- run `./raspi-build.sh`. This will download the google quickdraw dataset and tensorflow model,
-then build the required docker image.
-- run `./raspi-run.sh`. This will start the docker image.
-
-
-### Troubleshooting
-
-- Check the log files in the `cartoonify/logs` folder for any error messages.
-- The most common issue when running on a raspi is not having the camera plugged in correctly.
-- If nothing is printing, check the logs then check whether images are being saved to `cartoonify/images`.
-- Check that you can manually print something from the thermal printer from the command line.
+It was also implemented a client program, written in python, that receives a path to an image as an argument, makes the http request to the flask server and receives the cartoon image. 
 
