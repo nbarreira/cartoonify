@@ -5,14 +5,26 @@ This is a REST server based on the Cartoonify project. The aim of this project i
 In this fork, as it is intended to run in a desktop computer, all the references to raspberry pi and arduino were removed.
 
 
-This project contains a REST server written in Flask that exposes only one type of request:
+This project contains a REST server written in Flask that exposes only two requests:
 
 - URL:    /cartoon
 - Method: POST
+- Objective: converts the input image into a cartoon
 - Data params: { 'image': 'base64 encoded string with the image data'}
 - Success response: 
 	  - Code: 200
 	  - Content: { 'cartoon': 'base64 encoded string with the cartoon data'}
+- Error response:
+	- Code: 400
+	- Content: {'msg': 'cause of the error (Invalid image format/no image was provided)'}
+
+- URL:    /time
+- Method: GET
+- Objective: returns the current time for testing purpouses
+- Data params: None
+- Success response: 
+	  - Code: 200
+	  - Content: Current time as a string
 
 
 
@@ -29,11 +41,11 @@ This project was tested on Debian GNU/Linux, Windows 10 Home and macOS High Sier
 
 All the dependencies might have been installed previously in your computer so you only have to run the following commands from terminal:
 	 
-	1. Install project dependencies: 
+1. Install project dependencies: 
 
 	`$ pip3 install -r install/requirements_desktop.txt` 
 
-	2.  Download the cartoon dataset (~1.4GB) and the tensorflow model (~30MB) by running: 
+2.  Download the cartoon dataset (~1.4GB) and the tensorflow model (~30MB) by running: 
 
 	`$ python3 install/download_assets.py` 
 
@@ -59,7 +71,7 @@ Finally, install the project dependencies, datasets and models:
 
 #### Windows 10 64 bits
 
-1. Download and install python 3.6 windows x86_64 web-based installer) from [here](https://www.python.org/downloads/release/python-366/).
+1. Download and install python 3.6 windows x86_64 web-based installer from [here](https://www.python.org/downloads/release/python-366/).
 
 Important: mark the "Add Python 3.6 to PATH" checkbox in the first step!
 

@@ -93,7 +93,7 @@ class Workflow(object):
         return annotated_path, cartoon_path
 
 
-    def get_results(self):
+    def get_png_cartoon(self):
         """get result images as png
 
         :return cartoon image as numpy array

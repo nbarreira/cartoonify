@@ -6,8 +6,6 @@ from pathlib import Path
 import logging
 import datetime
 from flask import Flask, request, jsonify
-from PIL import Image
-import io
 
 root = Path(__file__).parent
 # init objects
@@ -21,7 +19,7 @@ logging_filename = datetime.datetime.now().strftime('%Y%m%d-%H%M.log')
 logging_path = Path(__file__).parent / 'logs'
 if not logging_path.exists():
     logging_path.mkdir()
-logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG, filename=str(Path(__file__).parent / 'logs' / logging_filename))
+logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.ERROR, filename=str(Path(__file__).parent / 'logs' / logging_filename))
 
 app = Workflow(dataset, imageprocessor)
 app.setup()
@@ -32,20 +30,26 @@ flask_app = Flask(__name__)
 
 @flask_app.route('/cartoon', methods=['POST'])
 def get_cartoon():
-    print("Request received")
+    print('Request received')
     if request and 'image' in request.files:
-        # Read the bytestring
-        imagestr = request.files['image'].read()
-        image = imageprocessor.load_image_from_bytestring(imagestr)
-        # Process the image and return the results
-        app.process(image)
-        cartoon = app.get_results()
-        #imageprocessor.get_composite(image, cartoon).show()
-        byteStr = imageprocessor.npimage_to_bytestring(cartoon)
-        return jsonify({'cartoon': byteStr})
+        try:
+            # Read the bytestring
+            imagestr = request.files['image'].read()
+            image = imageprocessor.load_image_from_bytestring(imagestr)
+            # Process the image and return the results
+            app.process(image)
+            cartoon = app.get_png_cartoon()
+            byteStr = imageprocessor.npimage_to_bytestring(cartoon)
+            return jsonify({'cartoon': byteStr})
+        except Exception:
+            return jsonify({'msg': 'Invalid image format'}), 400
+
+    return jsonify({'msg': 'No image was provided'}), 400
 
 
-    return "No image was provided\n"
+@flask_app.route('/time')
+def time():
+    return str(datetime.datetime.today()) + '\n'
 
 
 if __name__ == '__main__':

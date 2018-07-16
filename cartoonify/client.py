@@ -18,11 +18,17 @@ else:
 
     # Send the image to the server by a POST request
     r = requests.post(URL, files=file)
-    data = r.json()
-    if 'cartoon' in data:
-        dst = Image.open(BytesIO(base64.b64decode(data['cartoon'])))
-        src = Image.open(filename)
-        src.show()
-        dst.show()
+    if r.status_code == 200:
+        data = r.json()
+        if 'cartoon' in data:
+            dst = Image.open(BytesIO(base64.b64decode(data['cartoon'])))
+            src = Image.open(filename)
+            src.show()
+            dst.show()
+    else:
+        print('Error', r.status_code)
+        data = r.json()
+        if 'msg' in data:
+            print('Cause:', data['msg'])
 
 
