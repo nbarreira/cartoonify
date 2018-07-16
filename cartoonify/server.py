@@ -48,4 +48,6 @@ def get_cartoon():
     return "No image was provided\n"
 
 
-
+if __name__ == '__main__':
+    flask_app.run()
+    
