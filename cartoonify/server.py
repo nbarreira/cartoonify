@@ -28,6 +28,10 @@ app.setup()
 flask_app = Flask(__name__)
 
 
+@flask_app.errorhandler(404)
+def page_not_found(e):
+    return jsonify({'msg': 'Page not found'}), 404
+
 @flask_app.route('/cartoon', methods=['POST'])
 def get_cartoon():
     print('Request received')
@@ -36,12 +40,16 @@ def get_cartoon():
             # Read the bytestring
             imagestr = request.files['image'].read()
             image = imageprocessor.load_image_from_bytestring(imagestr)
+
             # Process the image and return the results
             app.process(image)
-            cartoon = app.get_png_cartoon()
+            cartoon = app.get_png_cartoon()            
+            #imageprocessor.get_composite(image, cartoon).show()
+
             byteStr = imageprocessor.npimage_to_bytestring(cartoon)
             return jsonify({'cartoon': byteStr})
-        except Exception:
+        except Exception as e:
+            print('exception', e)
             return jsonify({'msg': 'Invalid image format'}), 400
 
     return jsonify({'msg': 'No image was provided'}), 400
