@@ -8,23 +8,24 @@ In this fork, as it is intended to run in a desktop computer, all the references
 This project contains a REST server written in Flask that exposes only two requests:
 
 - URL:    /cartoon
-- Method: POST
-- Objective: converts the input image into a cartoon
-- Data params: { 'image': 'base64 encoded string with the image data'}
-- Success response: 
-	  - Code: 200
-	  - Content: { 'cartoon': 'base64 encoded string with the cartoon data'}
-- Error response:
-	- Code: 400
-	- Content: {'msg': 'cause of the error (Invalid image format/no image was provided)'}
+	- Method: POST
+	- Objective: converts the input image into a cartoon
+	- Data params: { 'image': 'base64 encoded string with the image data'}
+	- Success response: 
+		- Code: 200
+	  	- Content: { 'cartoon': 'base64 encoded string with the cartoon data'}
+	- Error response:
+		- Code: 400
+		- Content: {'msg': 'cause of the error (Invalid image format/no image was provided)'}
+
 
 - URL:    /time
-- Method: GET
-- Objective: returns the current time for testing purpouses
-- Data params: None
-- Success response: 
-	  - Code: 200
-	  - Content: Current time as a string
+	- Method: GET
+	- Objective: returns the current time for testing purpouses
+	- Data params: None
+	- Success response: 
+		- Code: 200
+	  	- Content: Current time as a string
 
 
 
@@ -33,9 +34,11 @@ This project contains a REST server written in Flask that exposes only two reque
 
 This project was tested on Debian GNU/Linux, Windows 10 Home and macOS High Sierra. The global requirements are:
     
-	- OS 64 bits (non virtualized)
-    - Python 3.6
-    - Gtk3
+- OS 64 bits (non virtualized)
+
+- Python 3.6
+
+- Gtk3
 
 #### GNU/Linux 64 bits
 
@@ -128,6 +131,7 @@ To shutdown the server, hit Ctrl+C.
 It was also implemented a client program, written in python, that receives a path to an image as an argument, makes the http request to the flask server and receives the cartoon image. 
 
 In GNU/Linux and macOS, execute in a new terminal:
+
 `$ python3 client.py path_to_image`
 
 In Windows, execute in a new Command prompt:

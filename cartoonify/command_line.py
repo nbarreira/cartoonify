@@ -35,7 +35,7 @@ else:
     image = imageprocessor.load_image_into_numpy_array(filename)
     app.process(image)
 
-    #app.save_results(debut=False)
-    cartoon = app.get_results()
+    #app.save_results(debug=False)
+    cartoon = app.get_png_cartoon()
     imageprocessor.get_composite(image, cartoon).show()
     app.close()
