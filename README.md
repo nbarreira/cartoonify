@@ -72,6 +72,11 @@ Finally, install the project dependencies, datasets and models:
 
 `$ python3 install/download_assets.py` 
 
+Note: the python version can be changed with the following command:
+
+`$ brew switch python 3.7.0`
+
+
 #### Windows 10 64 bits
 
 1. Download and install python 3.6 windows x86_64 web-based installer from [here](https://www.python.org/downloads/release/python-366/).
