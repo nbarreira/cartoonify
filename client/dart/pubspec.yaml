@@ -1,0 +1,9 @@
+name:  CartoonifyDartClient
+description: A sample cartoonify client written in dart
+
+environment:
+  sdk: '>=2.0.0 <3.0.0'
+
+dependencies:
+    http: any
+    path: any

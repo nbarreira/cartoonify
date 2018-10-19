@@ -11,7 +11,7 @@ This project contains a REST server written in Flask that exposes only two reque
 	- Method: POST
 	- Objective: converts the input image into a cartoon
 	- Data params: { 'image': 'base64 encoded string with the image data'}
-	- Success response: 
+	- Success response:
 		- Code: 200
 	  	- Content: { 'cartoon': 'base64 encoded string with the cartoon data'}
 	- Error response:
@@ -23,7 +23,7 @@ This project contains a REST server written in Flask that exposes only two reque
 	- Method: GET
 	- Objective: returns the current time for testing purpouses
 	- Data params: None
-	- Success response: 
+	- Success response:
 		- Code: 200
 	  	- Content: Current time as a string
 
@@ -33,7 +33,7 @@ This project contains a REST server written in Flask that exposes only two reque
 ### Installation
 
 This project was tested on Debian GNU/Linux, Windows 10 Home and macOS High Sierra. The global requirements are:
-    
+
 - OS 64 bits (non virtualized)
 
 - Python 3.6
@@ -43,14 +43,14 @@ This project was tested on Debian GNU/Linux, Windows 10 Home and macOS High Sier
 #### GNU/Linux 64 bits
 
 All the dependencies might have been installed previously in your computer so you only have to run the following commands from terminal:
-	 
-1. Install project dependencies: 
 
-	`$ pip3 install -r install/requirements_desktop.txt` 
+1. Install project dependencies:
 
-2.  Download the cartoon dataset (~1.4GB) and the tensorflow model (~30MB) by running: 
+	`$ pip3 install -r install/requirements_desktop.txt`
 
-	`$ python3 install/download_assets.py` 
+2.  Download the cartoon dataset (~1.4GB) and the tensorflow model (~30MB) by running:
+
+	`$ python3 install/download_assets.py`
 
 #### macOS High Sierra 64 bits
 
@@ -68,9 +68,9 @@ Then, install python 3.6 using the following formula:
 
 Finally, install the project dependencies, datasets and models:
 
-`$ pip3 install -r install/requirements_desktop.txt` 
+`$ pip3 install -r install/requirements_desktop.txt`
 
-`$ python3 install/download_assets.py` 
+`$ python3 install/download_assets.py`
 
 #### Windows 10 64 bits
 
@@ -93,7 +93,7 @@ To check the installation, open a Windows Command Prompt and type:
 
 5. Install the project dependencies, datasets and models:
 
-`C:\Users\User> pip install -r install\requirements_desktop.txt` 
+`C:\Users\User> pip install -r install\requirements_desktop.txt`
 
 `C:\Users\User> python install\download_assets.py`
 
@@ -111,24 +111,24 @@ If everything is ok, the original image and its cartoon version will be shown in
 ### REST server
 
 
-For running the REST server, create a environment variable for the flask app:
+For running the REST server, go to the `server` directory and  create a environment variable for the flask app:
 
 `$ export FLASK_APP=server.py` # GNU/Linux & macOS
 
-`C:\Users\User\cartoonify\cartoonify\> SET FLASK_APP=server.py` # Windows
+`C:\Users\User\cartoonify\server\> SET FLASK_APP=server.py` # Windows
 
 Run the server with the following command:
 
 `$ python3 -m flask run` # GNU/Linux & macOS
 
-`C:\Users\User\cartoonify\cartoonify\> python -m flask run` # Windows
+`C:\Users\User\cartoonify\server\> python -m flask run` # Windows
 
 To shutdown the server, hit Ctrl+C.
 
 
 ### Python client
 
-It was also implemented a client program, written in python, that receives a path to an image as an argument, makes the http request to the flask server and receives the cartoon image. 
+It was also implemented a client program, written in python, that receives a path to an image as an argument, makes the http request to the flask server and receives the cartoon image.
 
 In GNU/Linux and macOS, execute in a new terminal:
 
@@ -136,7 +136,7 @@ In GNU/Linux and macOS, execute in a new terminal:
 
 In Windows, execute in a new Command prompt:
 
-`C:\Users\User\cartoonify\cartoonify\> python client.py path_to_image`
+`C:\Users\User\cartoonify\client\> python client.py path_to_image`
 
 
 ![Output of the client program in macOS](img/server-macOS.png)

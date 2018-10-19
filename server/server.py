@@ -43,7 +43,7 @@ def get_cartoon():
 
             # Process the image and return the results
             app.process(image)
-            cartoon = app.get_png_cartoon()            
+            cartoon = app.get_png_cartoon()
             #imageprocessor.get_composite(image, cartoon).show()
 
             byteStr = imageprocessor.npimage_to_bytestring(cartoon)
@@ -56,10 +56,9 @@ def get_cartoon():
 
 
 @flask_app.route('/time')
-def time():
+def today():
     return str(datetime.datetime.today()) + '\n'
 
 
 if __name__ == '__main__':
     flask_app.run()
-    
