@@ -145,3 +145,11 @@ In Windows, execute in a new Command prompt:
 
 
 ![Output of the client program in macOS](img/server-macOS.png)
+
+
+### Dart client
+Another client was implemented in dart. This script opens a file, makes the http request to the flask server and writes the cartoon image to an output file. Both input and output paths are hardcoded in the dart script (`client/samples/image.jpg` and `client/samples/cartoon.png`).
+
+In order to test this client, [install the dart framework](https://www.dartlang.org/install)  or use the dart interpreter installed with flutter. Go to the dart client directory and  execute `pub get` (pub is located in the bin directory of the dart sdk) to install the package dependencies. Finally, run the client as follows and check the output in the `client\samples` directory:
+
+`dart client.dart`
