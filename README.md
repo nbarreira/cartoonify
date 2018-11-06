@@ -113,6 +113,8 @@ If everything is ok, the original image and its cartoon version will be shown in
 ![Output of the standalone program in Win10](img/standalone.png)
 
 
+Note: In GNU/Linux, if no window is shown, install `display`, an image viewer from the package `imagemagick`.
+
 ### REST server
 
 
